@@ -10,7 +10,7 @@
 #define HEIGHT 100
 #define WIDTH 100
 #define STEP 5
-
+ 
 Controller sprite(START_X, START_Y, HEIGHT, WIDTH, STEP);
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
