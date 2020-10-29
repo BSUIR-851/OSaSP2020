@@ -6,7 +6,7 @@
 *.sln.docstates
 cmake-build-debug/
 .idea/
-
+ 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
