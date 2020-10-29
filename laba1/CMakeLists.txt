@@ -3,4 +3,4 @@ project(laba1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(laba1 main.cpp)
+add_executable(laba1 MovingPicture.cpp Controller.cpp Controller.h)
