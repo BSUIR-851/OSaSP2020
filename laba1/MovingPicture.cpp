@@ -11,7 +11,7 @@
 #define WIDTH 100
 #define STEP 5
  
-Controller sprite(START_X, START_Y, HEIGHT, WIDTH, STEP);
+Controller pictureObj(START_X, START_Y, HEIGHT, WIDTH, STEP);
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -62,29 +62,27 @@ int WinMain(HINSTANCE This, HINSTANCE Prev, LPTSTR cmd, int mode) {
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     PAINTSTRUCT ps;
     HDC hdc;
-    HDC hdcMem;
-    static HBRUSH hBrush;
-    sprite.setHWND(hWnd);
+    pictureObj.setHWND(hWnd);
 
     switch(message) {
         case WM_CREATE:
-            hBrush = CreateSolidBrush(RGB(255, 0, 0));
-            sprite.setBitmap((HBITMAP)LoadImage(NULL, (LPCSTR)"C:\\Study\\ksisbw-1.bmp", IMAGE_BITMAP, WIDTH, HEIGHT, LR_LOADFROMFILE));
+            pictureObj.setBrush(CreateSolidBrush(RGB(255, 0, 0)));
+            pictureObj.setBitmap((HBITMAP)LoadImage(NULL, (LPCSTR)"C:\\Study\\ksisbw-1.bmp", IMAGE_BITMAP, WIDTH, HEIGHT, LR_LOADFROMFILE));
             break;
 
         case WM_PAINT:
             hdc = BeginPaint(hWnd, &ps);
-            sprite.setHDC(hdc);
+            (pictureObj.*(pictureObj.handler))(hdc);
             EndPaint(hWnd, &ps);
             break;
 
         case WM_KEYDOWN:
-            sprite.changeRects(message, wParam);
+            pictureObj.changeRects(message, wParam);
             InvalidateRect(hWnd, NULL, TRUE);
             break;
 
         case WM_MOUSEWHEEL:
-            sprite.changeRects(message, wParam);
+            pictureObj.changeRects(message, wParam);
             InvalidateRect(hWnd, NULL, TRUE);
             break;
 

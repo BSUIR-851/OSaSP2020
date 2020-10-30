@@ -8,7 +8,14 @@ Controller::Controller(int startX, int startY, int height, int width, int STEP) 
     this->STEP = STEP;
 }
 
-void Controller::setHDC(HDC hdc) {
+void Controller::setHDCWithSprite(HDC hdc) {
+    this->hdc = hdc;
+    this->changeRectsWithClientSpace();
+    SelectObject(this->hdc, this->hbr);
+    Rectangle(this->hdc, this->rectX, this->rectY, this->rectX + this->width, this->rectY + this->height);
+}
+
+void Controller::setHDCWithBitmap(HDC hdc) {
     this->hdc = hdc;
     this->changeRectsWithClientSpace();
     BITMAP bitmap;
@@ -25,6 +32,15 @@ void Controller::changeRects(UINT message, WPARAM wParam) {
     switch (message) {
         case WM_KEYDOWN:
             switch (wParam) {
+                case VK_SPACE:
+                    this->isPicture = !this->isPicture;
+                    if (this->isPicture) {
+                        this->handler = &Controller::setHDCWithBitmap;
+                    } else {
+                        this->handler = &Controller::setHDCWithSprite;
+                    }
+                    break;
+
                 case VK_UP:
                     this->rectY -= this->STEP;
                     break;
@@ -63,27 +79,31 @@ void Controller::changeRects(UINT message, WPARAM wParam) {
 
 void Controller::setHWND(HWND hWnd) {
     this->hWnd = hWnd;
-    GetClientRect(this->hWnd, &this->rect);
+    GetClientRect(this->hWnd, &this->clientRect);
 }
 
 void Controller::setBitmap(HBITMAP hBitmap) {
     this->hBitmap = hBitmap;
 }
 
+void Controller::setBrush(HBRUSH hbr) {
+    this->hbr = hbr;
+}
+
 void Controller::changeRectsWithClientSpace() {
     int endX = this->rectX + this->width;
     int endY = this->rectY + this->height;
-    GetClientRect(this->hWnd, &this->rect);
-    if (this->rectX <= this->rect.left)
+    GetClientRect(this->hWnd, &this->clientRect);
+    if (this->rectX <= this->clientRect.left)
         this->rectX += this->width/2;
 
-    if (this->rectY <= this->rect.top)
+    if (this->rectY <= this->clientRect.top)
         this->rectY += this->height/2;
 
-    if (endX >= this->rect.right)
+    if (endX >= this->clientRect.right)
         this->rectX -= this->width/2;
 
-    if (endY >= this->rect.bottom)
+    if (endY >= this->clientRect.bottom)
         this->rectY -= this->height/2;
 }
 
